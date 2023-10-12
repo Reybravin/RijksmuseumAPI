@@ -19,3 +19,9 @@ public struct ArtObject: Decodable {
     }
     
 }
+
+extension ArtObject: Equatable {
+    public static func == (lhs: ArtObject, rhs: ArtObject) -> Bool {
+        lhs.id == rhs.id
+    }
+}

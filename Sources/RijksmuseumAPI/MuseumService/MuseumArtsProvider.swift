@@ -8,7 +8,8 @@
 import Foundation
 
 enum MuseumArtsEndpoint {
-    case artByMaker(maker: String, page: Int)
+    case artByMaker(maker: String, page: Int, numberOfResultsPerPage: Int)
+    case artByQuery(query: String, page: Int, numberOfResultsPerPage: Int)
 }
 
 internal struct MuseumArtsProvider: ApiEndpoint {
@@ -37,18 +38,26 @@ internal struct MuseumArtsProvider: ApiEndpoint {
     
     var path: String {
         switch endpoint {
-        case .artByMaker:
+        case .artByMaker, .artByQuery:
             return "collection"
         }
     }
     
     var queryForCall: [URLQueryItem]? {
         switch endpoint {
-        case .artByMaker(let maker, let page):
+        case .artByMaker(let maker, let page, let numberOfResultsPerPage):
             var queryItems: [URLQueryItem] = []
             queryItems.append(URLQueryItem(name: "key", value: apiKey))
             queryItems.append(URLQueryItem(name: "involvedMaker", value: maker))
             queryItems.append(URLQueryItem(name: "p", value: String(page)))
+            queryItems.append(URLQueryItem(name: "ps", value: String(numberOfResultsPerPage)))
+            return queryItems
+        case .artByQuery(let query, let page, let numberOfResultsPerPage):
+            var queryItems: [URLQueryItem] = []
+            queryItems.append(URLQueryItem(name: "key", value: apiKey))
+            queryItems.append(URLQueryItem(name: "q", value: query))
+            queryItems.append(URLQueryItem(name: "p", value: String(page)))
+            queryItems.append(URLQueryItem(name: "ps", value: String(numberOfResultsPerPage)))
             return queryItems
         }
     }
@@ -56,5 +65,4 @@ internal struct MuseumArtsProvider: ApiEndpoint {
     var method: ApiHTTPMethod {
         .GET
     }
-    
 }

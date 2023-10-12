@@ -8,5 +8,7 @@
 import Foundation
 
 public protocol IMuseumService {
-    func fetchMakerArt(searchQuery: String, page: Int) async throws -> ArtObjectList
+    func fetchMakerArt(maker: String, page: Int, numberOfResultsPerPage: Int) async throws -> ArtObjectList
+
+    func fetchArt(searchQuery: String, page: Int, numberOfResultsPerPage: Int) async throws -> ArtObjectList
 }
