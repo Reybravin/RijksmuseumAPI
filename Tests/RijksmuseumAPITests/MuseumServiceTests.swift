@@ -22,7 +22,7 @@ final class MuseumServiceTests: XCTestCase {
     }
     
     func testFetchMakerArt() async throws {
-        let result = try await sut.fetchMakerArt(searchQuery: "Rembrandt", page: 1)
+        let result = try await sut.fetchMakerArt(maker: "Rembrandt", page: 1, numberOfResultsPerPage: 10)
         XCTAssertNotNil(result.artObjects)
     }
     

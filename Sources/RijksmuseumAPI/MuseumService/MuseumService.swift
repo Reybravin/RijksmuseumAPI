@@ -20,9 +20,11 @@ public final class MuseumService: IMuseumService {
     }
     
     // MARK: - Public methods
-    public func fetchMakerArt(searchQuery: String, page: Int) async throws -> ArtObjectList {
+    public func fetchArt(searchQuery: String,
+                              page: Int,
+                              numberOfResultsPerPage: Int) async throws -> ArtObjectList {
         
-        let endpoint: MuseumArtsEndpoint = .artByMaker(maker: searchQuery, page: page)
+        let endpoint: MuseumArtsEndpoint = .artByMaker(maker: searchQuery, page: page, numberOfResultsPerPage: numberOfResultsPerPage)
         
         guard let url = MuseumArtsProvider(endpoint: endpoint,
                                            api: apiKey,
@@ -34,6 +36,23 @@ public final class MuseumService: IMuseumService {
         return result
     }
     
+    public func fetchMakerArt(maker: String,
+                              page: Int,
+                              numberOfResultsPerPage: Int) async throws -> ArtObjectList {
+        
+        let endpoint: MuseumArtsEndpoint = .artByMaker(maker: maker, page: page, numberOfResultsPerPage: numberOfResultsPerPage)
+        
+        guard let url = MuseumArtsProvider(endpoint: endpoint,
+                                           api: apiKey,
+                                           language: language).url else {
+            throw MuseumDataError.invalidURL
+        }
+        
+        let result: ArtObjectList = try await fetchData(url: url)
+        return result
+    }
+    
+    // MARK: - Private methods
     private func fetchData<T: Decodable>(url: URL) async throws -> T {
         let (data, _) = try await URLSession.shared.data(from: url)
         
